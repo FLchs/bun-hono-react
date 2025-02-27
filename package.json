@@ -1,0 +1,9 @@
+{
+  "name": "bun-hono-react",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "bun run --filter \"./apps/*\" dev"
+  }
+}
