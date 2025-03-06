@@ -1,10 +1,10 @@
-import { Hono } from 'hono'
+import { Hono } from "hono";
+import { itemsRoute } from "./routes/items";
 
-const app = new Hono()
+const app = new Hono();
 
-
-const route = app.get(
-  '/date',
+export const route = app.get(
+  "/date",
   async (c) => {
     return c.json(
       {
@@ -12,12 +12,10 @@ const route = app.get(
         date: new Date().toISOString(),
       },
       200
-    )
+    );
   }
-).get('/', (c) => {
-  return c.text("Hello")
-})
+).route("/items", itemsRoute);
 
 
-export default app
+export default app;
 export type AppType = typeof route

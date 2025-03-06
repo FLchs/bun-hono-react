@@ -1,16 +1,29 @@
 {
   "name": "@bunfs/server",
   "type": "module",
-    "exports": {
+  "exports": {
     ".": "./src/index.ts"
   },
   "scripts": {
     "dev": "bun run --hot src/index.ts"
   },
   "dependencies": {
-    "hono": "^4.7.2"
+    "@hono/zod-validator": "^0.4.3",
+    "better-sqlite3": "^11.8.1",
+    "dotenv": "^16.4.7",
+    "drizzle-orm": "^0.40.0",
+    "hono": "^4.7.2",
+    "zod": "^3.24.2"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@eslint/js": "^9.21.0",
+    "@hono/eslint-config": "^1.0.2",
+    "@stylistic/eslint-plugin-js": "^4.1.0",
+    "@types/bun": "^1.2.4",
+    "drizzle-kit": "^0.30.5",
+    "eslint": "^9.21.0",
+    "eslint-plugin-unicorn": "^57.0.0",
+    "globals": "^16.0.0",
+    "typescript-eslint": "^8.25.0"
   }
 }
