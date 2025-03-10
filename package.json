@@ -4,6 +4,9 @@
   "workspaces": [
     "apps/*"
   ],
+  "scripts": {
+    "dev": "bun run --filter \"./apps/*\" dev"
+  },
   "devDependencies": {
     "@types/bun": "latest"
   },
