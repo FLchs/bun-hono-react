@@ -2,7 +2,8 @@
   "name": "carmanager-3000",
   "type": "module",
   "workspaces": [
-    "apps/*"
+    "apps/*",
+    "packages/*"
   ],
   "scripts": {
     "dev": "bun run --filter \"./apps/*\" dev"
