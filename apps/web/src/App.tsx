@@ -5,14 +5,14 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { client } from "./lib/client";
 
 function App() {
-
   const queryClient = useQueryClient();
 
   const { data } = useQuery({
-    queryKey: ["count"], queryFn: async () => {
+    queryKey: ["count"],
+    queryFn: async () => {
       const response = await client.ping.$get();
       return await response.json();
-    }
+    },
   });
 
   const { mutate, error } = useMutation({
@@ -36,9 +36,7 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <button onClick={() => mutate()}>
-          count is {data?.count}
-        </button>
+        <button onClick={() => mutate()}>count is {data?.count}</button>
         <p>{error?.message}</p>
         <pre>{error?.issues}</pre>
         <p>

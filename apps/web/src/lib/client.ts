@@ -7,7 +7,7 @@ const customFetch: typeof fetch = async (input, init) => {
 
   const response = await fetch(input, init);
   if (response.status === 400) {
-    const data = await response.json() as { message: string, issues: string };
+    const data = (await response.json()) as { message: string; issues: string };
     throw new ApiError("Invalid request: " + data.message, data.issues);
   }
   return response;
@@ -15,5 +15,4 @@ const customFetch: typeof fetch = async (input, init) => {
 
 export const client = hc<AppType>("http://localhost:3000/", {
   fetch: customFetch,
-
 });

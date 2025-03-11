@@ -24,8 +24,8 @@ export default tseslint.config(
       "unicorn/filename-case": [
         "off",
         {
-          "case": "kebabCase"
-        }
+          case: "kebabCase",
+        },
       ],
       "react-refresh/only-export-components": [
         "warn",
