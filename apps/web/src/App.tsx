@@ -1,21 +1,24 @@
-import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
-import { hc } from "hono/client";
-import { AppType } from "@cm3k/api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-
-const client = hc<AppType>("http://localhost:3000/");
+import { client } from "./lib/client";
 
 function App() {
 
   const queryClient = useQueryClient();
 
-  const { data } = useQuery({ queryKey: ["count"], queryFn: async () => { const request = await client.ping.$get(); return await request.json(); } });
+  const { data } = useQuery({
+    queryKey: ["count"], queryFn: async () => {
+      const response = await client.ping.$get();
+      return await response.json();
+    }
+  });
 
-  const { mutateAsync } = useMutation({
-    mutationFn: async () => { await client.ping.$post({ json: { count: (data?.count ?? 0) + 1 } }); },
+  const { mutate, error } = useMutation({
+    mutationFn: async () => {
+      await client.ping.$post({ json: { count: (data?.count ?? 0) + 1 } });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["count"] });
     },
@@ -33,9 +36,11 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <button onClick={() => mutateAsync()}>
+        <button onClick={() => mutate()}>
           count is {data?.count}
         </button>
+        <p>{error?.message}</p>
+        <pre>{error?.issues}</pre>
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>

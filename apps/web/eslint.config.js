@@ -21,6 +21,12 @@ export default tseslint.config(
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
+      "unicorn/filename-case": [
+        "off",
+        {
+          "case": "kebabCase"
+        }
+      ],
       "react-refresh/only-export-components": [
         "warn",
         { allowConstantExport: true },
