@@ -6,7 +6,8 @@
   },
   "scripts": {
     "dev": "bun run --hot src/index.ts",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test": "bun test"
   },
   "dependencies": {
     "@cm3k/core": "workspace:*",

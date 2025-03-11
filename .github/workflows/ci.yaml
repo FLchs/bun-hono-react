@@ -12,3 +12,4 @@ jobs:
 
       - run: bun install
       - run: bun --filter "*" lint
+      - run: bun --filter "*" test --coverage
