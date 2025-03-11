@@ -4,6 +4,9 @@
   "exports": {
     ".": "./src/index.ts"
   },
+  "scripts": {
+    "lint": "eslint ."
+  },
   "devDependencies": {
     "@types/bun": "latest"
   },
