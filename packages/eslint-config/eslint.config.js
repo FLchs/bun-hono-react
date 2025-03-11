@@ -22,4 +22,10 @@ export default [
   ...tseslint.configs.recommended,
   eslintPluginUnicorn.configs.recommended,
   eslintPluginPrettierRecommended,
+  {
+    files: ["**/vite-env.d.ts"],
+    rules: {
+      "unicorn/prevent-abbreviations": "off",
+    },
+  },
 ];
