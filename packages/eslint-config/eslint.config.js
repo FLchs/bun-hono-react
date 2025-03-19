@@ -23,9 +23,16 @@ export default [
   eslintPluginUnicorn.configs.recommended,
   eslintPluginPrettierRecommended,
   {
-    files: ["**/vite-env.d.ts"],
     rules: {
-      "unicorn/prevent-abbreviations": "off",
+      "unicorn/prevent-abbreviations": [
+        "error",
+        {
+          checkFilenames: false,
+          allowList: {
+            db: true,
+          },
+        },
+      ],
     },
   },
 ];
