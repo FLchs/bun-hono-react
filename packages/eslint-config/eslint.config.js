@@ -24,6 +24,7 @@ export default [
   eslintPluginPrettierRecommended,
   {
     rules: {
+      "unicorn/no-empty-file": "off",
       "unicorn/prevent-abbreviations": [
         "error",
         {
