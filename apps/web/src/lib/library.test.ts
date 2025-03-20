@@ -3,6 +3,6 @@ import { client } from "./client";
 
 describe("customFetch", () => {
   it("should throw an ApiError on 400 status", async () => {
-    expect(client.ping.$get()).rejects.toThrowError();
+    expect(client.api.tasks.$get()).rejects.toThrowError();
   });
 });
