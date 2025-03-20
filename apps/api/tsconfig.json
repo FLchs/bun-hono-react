@@ -3,6 +3,20 @@
     "strict": true,
     "jsx": "react-jsx",
     "jsxImportSource": "hono/jsx",
-    "moduleResolution": "bundler"
-  }
+    "moduleResolution": "bundler",
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "module": "ESNext",
+    "rootDir": ".",
+    "outDir": "./dist",
+    "paths": {
+      "@lib/*": [
+        "./src/lib/*"
+      ],
+      "@db/*": [
+        "./src/db/*"
+      ]
+    }
+  },
 }
