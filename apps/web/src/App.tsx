@@ -1,51 +1,174 @@
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { client } from "./lib/client";
+import { InferRequestType } from "hono";
+import { taskInsertSchema, TaskStatus, taskStatus } from "../../api/src/db/schema/todo";
+import { AnyFieldApi, useForm } from "@tanstack/react-form";
+import { z } from "zod";
 
 function App() {
   const queryClient = useQueryClient();
 
   const { data } = useQuery({
-    queryKey: ["count"],
+    queryKey: ["tasks"],
     queryFn: async () => {
-      const response = await client.ping.$get();
+      const response = await client.api.tasks.$get();
       return await response.json();
     },
   });
 
   const { mutate, error } = useMutation({
-    mutationFn: async () => {
-      await client.ping.$post({ json: { count: (data?.count ?? 0) + 1 } });
+    mutationFn: async (
+      data: InferRequestType<typeof client.api.tasks.$post>,
+    ) => {
+      await client.api.tasks.$post(data);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["count"] });
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+    },
+  });
+
+  const { mutate: deleteTask } = useMutation({
+    mutationFn: async (id: number) => {
+      await client.api.tasks[":id{[0-9]+}"].$delete({
+        param: { id: id.toString() },
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+    },
+  });
+
+  const form = useForm({
+    defaultValues: {
+    } as z.infer<typeof taskInsertSchema>,
+    validators: {
+      onChange: taskInsertSchema,
+    },
+    onSubmit({ value, formApi }) {
+      console.log(value);
+      mutate({ json: value });
+      formApi.reset();
     },
   });
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
+      <h1>Tasks</h1>
       <div className="card">
-        <button onClick={() => mutate()}>count is {data?.count}</button>
+        <form
+          style={{ display: "flex", flexDirection: "column", gap: "8px" }}
+          onSubmit={(event) => {
+            event.preventDefault();
+            form.handleSubmit();
+          }}
+        >
+          <form.Field
+            name="title"
+            children={(field) => (
+              <>
+                <label htmlFor={field.name}>Title:</label>
+                <input
+                  id={field.name}
+                  name={field.name}
+                  value={field.state.value ?? ""}
+                  onBlur={field.handleBlur}
+                  onChange={(event) => field.handleChange(event.target.value)}
+                />
+                <FieldInfo field={field} />
+              </>
+            )}
+          />
+          <form.Field
+            name="status"
+            children={(field) => (
+              <>
+                <label htmlFor={field.name}>Status:</label>
+                <select
+                  id={field.name}
+                  name={field.name}
+                  value={field.state.value as TaskStatus}
+                  onBlur={field.handleBlur}
+                  onChange={(event) => field.handleChange(event.target.value as TaskStatus)}>
+                  {taskStatus.map((status, index) => (<option key={index} value={status}>{status.replaceAll("_", " ")}</option>))}
+                  <option>wrong</option>
+                </select>
+                <FieldInfo field={field} />
+              </>
+            )}
+          />
+          <form.Field
+            name="description"
+            children={(field) => (
+              <>
+                <label htmlFor={field.name}>Description:</label>
+                <input
+                  id={field.name}
+                  name={field.name}
+                  value={field.state.value ?? ""}
+                  onBlur={field.handleBlur}
+                  onChange={(event) => field.handleChange(event.target.value)}
+                />
+                <FieldInfo field={field} />
+              </>
+            )}
+          />
+          <button type="submit">
+            {form.state.isSubmitting ? "..." : "Submit"}
+          </button>
+        </form>
+
         <p>{error?.message}</p>
         <pre>{error?.issues}</pre>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+        {data?.tasks.map((task) => (
+          <Tasks
+            key={task.id}
+            title={task.title}
+            description={task.description}
+            onDelete={() => deleteTask(task.id)}
+          />
+        ))}
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
+    </>
+  );
+}
+
+function Tasks({
+  title,
+  description,
+  onDelete,
+}: {
+  title: string;
+  description: string | null;
+  onDelete: () => void;
+}) {
+  return (
+    <div style={{ textAlign: "left" }}>
+      <p>
+        <strong>Title: </strong>
+        {title}
       </p>
+      <p>
+        <strong> Description: </strong>
+        {description}
+      </p>
+      <button type="submit" onClick={onDelete}>
+        Delete
+      </button>
+      <hr />
+    </div>
+  );
+}
+
+function FieldInfo({ field }: { field: AnyFieldApi }) {
+  return (
+    <>
+      {field.state.meta.isTouched && field.state.meta.errors.length > 0 ? (
+        <em>
+          {field.state.meta.errors.map((error) => error.message).join(",")}
+        </em>
+      ) : undefined}
+      {field.state.meta.isValidating ? "Validating..." : undefined}
     </>
   );
 }
