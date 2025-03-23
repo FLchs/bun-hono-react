@@ -1,4 +1,4 @@
-import { AppType } from "@cm3k/api";
+import { AppType } from "@api/src";
 import { ApiError } from "@cm3k/core";
 import { hc } from "hono/client";
 

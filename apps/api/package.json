@@ -1,6 +1,7 @@
 {
   "name": "@cm3k/api",
   "type": "module",
+  "module": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts"
   },
@@ -13,12 +14,16 @@
     "@cm3k/core": "workspace:*",
     "@hono/standard-validator": "^0.1.2",
     "@hono/zod-validator": "^0.4.3",
-    "hono": "^4.7.4",
     "arktype": "2.0.0",
+    "better-sqlite3": "^11.9.1",
+    "drizzle-orm": "^0.40.1",
+    "drizzle-zod": "^0.7.0",
+    "hono": "^4.7.4",
     "zod": "^3.24.2"
   },
   "devDependencies": {
     "@cm3k/eslint-config": "workspace:*",
-    "@types/bun": "latest"
+    "@types/bun": "^1.2.5",
+    "drizzle-kit": "^0.30.5"
   }
 }
