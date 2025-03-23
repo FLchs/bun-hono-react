@@ -5,7 +5,8 @@
     ".": "./src/index.ts"
   },
   "scripts": {
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "typecheck": "bun run tsc --noEmit --skipLibCheck"
   },
   "devDependencies": {
     "@types/bun": "latest"

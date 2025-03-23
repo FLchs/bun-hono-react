@@ -11,6 +11,6 @@ jobs:
       - uses: oven-sh/setup-bun@v2
 
       - run: bun install
-      - run: bun tsc --noEmit --skipLibCheck
+      - run: bun --filter "*" typecheck
       - run: bun --filter "*" lint
       - run: bun --filter "*" test --coverage
