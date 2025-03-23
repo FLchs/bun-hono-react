@@ -9,7 +9,6 @@
     "declarationMap": true,
     "module": "ESNext",
     "rootDir": ".",
-    "outDir": "./dist",
     "paths": {
       "@lib/*": [
         "./src/lib/*"
