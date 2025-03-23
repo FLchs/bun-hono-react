@@ -2,8 +2,8 @@ import "./App.css";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { client } from "./lib/client";
 import { InferRequestType } from "hono";
-import { taskInsertSchema, TaskStatus, taskStatus } from "../../api/src/db/schema/todo";
 import { AnyFieldApi, useForm } from "@tanstack/react-form";
+import { pureTaskInsertSchema, taskStatus, TaskStatus } from "@cm3k/api/schema";
 import { z } from "zod";
 
 function App() {
@@ -40,10 +40,9 @@ function App() {
   });
 
   const form = useForm({
-    defaultValues: {
-    } as z.infer<typeof taskInsertSchema>,
+    defaultValues: {} as z.infer<typeof pureTaskInsertSchema>,
     validators: {
-      onChange: taskInsertSchema,
+      onChange: pureTaskInsertSchema,
     },
     onSubmit({ value, formApi }) {
       console.log(value);
@@ -89,8 +88,15 @@ function App() {
                   name={field.name}
                   value={field.state.value as TaskStatus}
                   onBlur={field.handleBlur}
-                  onChange={(event) => field.handleChange(event.target.value as TaskStatus)}>
-                  {taskStatus.map((status, index) => (<option key={index} value={status}>{status.replaceAll("_", " ")}</option>))}
+                  onChange={(event) =>
+                    field.handleChange(event.target.value as TaskStatus)
+                  }
+                >
+                  {taskStatus.map((status, index) => (
+                    <option key={index} value={status}>
+                      {status.replaceAll("_", " ")}
+                    </option>
+                  ))}
                   <option>wrong</option>
                 </select>
                 <FieldInfo field={field} />
