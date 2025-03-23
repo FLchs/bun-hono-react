@@ -1,17 +1,9 @@
 import { Hono } from "hono";
-import { pingRouter } from "./routes/ping";
-import { HTTPException } from "hono/http-exception";
-import { ApiError } from "@cm3k/core";
+import { tasksRouter } from "./routes/tasks";
 
-const app = new Hono().route("/ping", pingRouter).onError((error, c) => {
-  if (error instanceof HTTPException) {
-    return c.json(
-      new ApiError(error.message, JSON.stringify({ error: error.cause })),
-      error.status ?? 500,
-    );
-  }
-  return c.json(new ApiError("Internal server error", error.message), 500);
-});
+const app = new Hono<{ Variables: { error: string } }>();
+const apiRoutes = app.basePath("/api").route("/tasks", tasksRouter);
 
 export default app;
-export type AppType = typeof app;
+export { apiRoutes };
+export type AppType = typeof apiRoutes;
