@@ -1,0 +1,23 @@
+{
+  "name": "@cm3k/eslint-config",
+  "type": "module",
+  "version": "1.0.0",
+  "exports": {
+    ".": "./eslint.config.js"
+  },
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@stylistic/eslint-plugin-js": "^4.2.0",
+    "eslint": "^9.22.0",
+    "eslint-plugin-unicorn": "^57.0.0",
+    "typescript-eslint": "^8.26.0"
+  },
+  "devDependencies": {
+    "@stylistic/eslint-plugin-ts": "^4.2.0",
+    "eslint-config-prettier": "^10.1.1",
+    "eslint-plugin-prettier": "^5.2.3",
+    "prettier": "^3.5.3"
+  }
+}

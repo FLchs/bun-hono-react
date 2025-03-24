@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "jsx": "react-jsx",
+    "jsxImportSource": "hono/jsx",
+    "moduleResolution": "bundler",
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "module": "ESNext",
+    "rootDir": ".",
+    "paths": {
+      "@lib/*": [
+        "./src/lib/*"
+      ],
+      "@db/*": [
+        "./src/db/*"
+      ]
+    }
+  }
+}
