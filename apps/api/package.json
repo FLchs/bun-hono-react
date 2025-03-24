@@ -2,7 +2,8 @@
   "name": "@cm3k/api",
   "type": "module",
   "exports": {
-    "./schema": "./src/db/schema/index.ts"
+    "./schema": "./src/db/schema/index.ts",
+    "./app": "./src/index.ts"
   },
   "scripts": {
     "dev": "bun run --hot src/index.ts",

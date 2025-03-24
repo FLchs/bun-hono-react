@@ -9,6 +9,8 @@ export default defineConfig({
   resolve: {
     alias: {
       "@api/schema": path.resolve(import.meta.dir, "../api/schema"),
+      "@": path.resolve(import.meta.dirname, "./src"),
+      "@api": path.resolve(import.meta.dirname, "./src/lib/api"),
     },
   },
 });
