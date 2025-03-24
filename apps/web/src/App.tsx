@@ -1,51 +1,40 @@
 import "./App.css";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { client } from "./lib/client";
-import { InferRequestType } from "hono";
 import { AnyFieldApi, useForm } from "@tanstack/react-form";
 import { pureTaskInsertSchema, taskStatus, TaskStatus } from "@cm3k/api/schema";
 import { z } from "zod";
+import { createTask, deleteTask, getTasks } from "@api/tasks";
 
 function App() {
   const queryClient = useQueryClient();
 
   const { data } = useQuery({
     queryKey: ["tasks"],
-    queryFn: async () => {
-      const response = await client.api.tasks.$get();
-      return await response.json();
-    },
+    queryFn: getTasks,
   });
 
   const { mutate, error } = useMutation({
-    mutationFn: async (
-      data: InferRequestType<typeof client.api.tasks.$post>,
-    ) => {
-      await client.api.tasks.$post(data);
-    },
+    mutationFn: createTask,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
   });
 
-  const { mutate: deleteTask } = useMutation({
-    mutationFn: async (id: number) => {
-      await client.api.tasks[":id{[0-9]+}"].$delete({
-        param: { id: id.toString() },
-      });
-    },
+  const { mutate: deleteT } = useMutation({
+    mutationFn: deleteTask,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
   });
 
   const form = useForm({
-    defaultValues: {} as z.infer<typeof pureTaskInsertSchema>,
+    defaultValues: {
+      status: taskStatus[0],
+    } as z.infer<typeof pureTaskInsertSchema>,
     validators: {
       onChange: pureTaskInsertSchema,
     },
     onSubmit({ value, formApi }) {
-      console.log(value);
       mutate({ json: value });
       formApi.reset();
     },
@@ -131,7 +120,7 @@ function App() {
             key={task.id}
             title={task.title}
             description={task.description}
-            onDelete={() => deleteTask(task.id)}
+            onDelete={() => deleteT(task.id)}
           />
         ))}
       </div>
