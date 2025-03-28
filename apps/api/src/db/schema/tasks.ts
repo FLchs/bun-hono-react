@@ -1,5 +1,6 @@
 import { sql } from "drizzle-orm";
 import { integer, text, sqliteTable } from "drizzle-orm/sqlite-core";
+import { createUpdateSchema } from "drizzle-zod";
 import { createSchemaFactory, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -31,5 +32,6 @@ export const pureTaskInsertSchema = z.object({
 });
 
 export const taskInsertSchema = createInsertSchema(tasksTable);
+export const taskUpdateSchema = createUpdateSchema(tasksTable);
 export const taskSelectSchema = createSelectSchema(tasksTable);
 export type TaskStatus = (typeof taskStatus)[number];
