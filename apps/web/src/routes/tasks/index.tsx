@@ -1,11 +1,17 @@
-import "./App.css";
+import { createFileRoute, Link } from "@tanstack/react-router";
+
+import "@/App.css";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AnyFieldApi, useForm } from "@tanstack/react-form";
-import { taskStatus, TaskStatus } from "@cm3k/api/schema";
+import { taskInsertSchema, taskStatus, TaskStatus } from "@cm3k/api/schema";
 import { z } from "zod";
 import { createTask, deleteTask, getTasks } from "@api/tasks";
 
-function App() {
+export const Route = createFileRoute("/tasks/")({
+  component: TasksList,
+});
+
+function TasksList() {
   const queryClient = useQueryClient();
 
   const { data } = useQuery({
@@ -30,9 +36,9 @@ function App() {
   const form = useForm({
     defaultValues: {
       status: taskStatus[0],
-    } as z.infer<typeof pureTaskInsertSchema>,
+    } as z.infer<typeof taskInsertSchema>,
     validators: {
-      onChange: pureTaskInsertSchema,
+      onChange: taskInsertSchema,
     },
     onSubmit({ value, formApi }) {
       mutate({ json: value });
@@ -83,7 +89,7 @@ function App() {
                 >
                   {taskStatus.map((status, index) => (
                     <option key={index} value={status}>
-                      {status.replaceAll("_", " ")}
+                      {status.replace("_", " ")}
                     </option>
                   ))}
                   <option>wrong</option>
@@ -117,6 +123,7 @@ function App() {
         <pre>{error?.issues}</pre>
         {data?.tasks.map((task) => (
           <Tasks
+            id={task.id}
             key={task.id}
             title={task.title}
             description={task.description}
@@ -129,10 +136,12 @@ function App() {
 }
 
 function Tasks({
+  id,
   title,
   description,
   onDelete,
 }: {
+  id: number;
   title: string;
   description: string | null;
   onDelete: () => void;
@@ -150,6 +159,13 @@ function Tasks({
       <button type="submit" onClick={onDelete}>
         Delete
       </button>
+      <Link
+        type="submit"
+        to="/tasks/$taskid/taskUpdate"
+        params={{ taskid: id.toString() }}
+      >
+        Edit
+      </Link>
       <hr />
     </div>
   );
@@ -167,5 +183,3 @@ function FieldInfo({ field }: { field: AnyFieldApi }) {
     </>
   );
 }
-
-export default App;

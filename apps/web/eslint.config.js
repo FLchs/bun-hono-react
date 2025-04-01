@@ -4,10 +4,11 @@ import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import tseslint from "typescript-eslint";
 import config from "@cm3k/eslint-config";
+import pluginRouter from "@tanstack/eslint-plugin-router";
 
 export default tseslint.config(
   ...config,
-  { ignores: ["dist"] },
+  { ignores: ["dist", "**/routeTree.gen.ts"] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ["**/*.{ts,tsx}"],
@@ -33,4 +34,5 @@ export default tseslint.config(
       ],
     },
   },
+  ...pluginRouter.configs["flat/recommended"],
 );
