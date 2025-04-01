@@ -1,14 +1,14 @@
-# Car Manager 3000
+# bun-hono-react
 
 To install dependencies:
 
-```sh
+```bash
 bun install
 ```
 
 To run:
 
-```sh
+```bash
 bun run dev
 ```
 

@@ -1,5 +1,5 @@
 {
-  "name": "carmanager-3000",
+  "name": "bun-hono-react",
   "type": "module",
   "workspaces": [
     "apps/*",
