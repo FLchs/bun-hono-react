@@ -46,6 +46,7 @@
         "@cm3k/core": "workspace:*",
         "@cm3k/eslint-config": "workspace:*",
         "@eslint/js": "^9.21.0",
+        "@tanstack/eslint-plugin-router": "^1.114.29",
         "@tanstack/react-router-devtools": "^1.114.27",
         "@tanstack/router-plugin": "^1.114.27",
         "@types/react": "^19.0.10",
@@ -306,6 +307,8 @@
     "@stylistic/eslint-plugin-js": ["@stylistic/eslint-plugin-js@4.2.0", "", { "dependencies": { "eslint-visitor-keys": "^4.2.0", "espree": "^10.3.0" }, "peerDependencies": { "eslint": ">=9.0.0" } }, "sha512-MiJr6wvyzMYl/wElmj8Jns8zH7Q1w8XoVtm+WM6yDaTrfxryMyb8n0CMxt82fo42RoLIfxAEtM6tmQVxqhk0/A=="],
 
     "@stylistic/eslint-plugin-ts": ["@stylistic/eslint-plugin-ts@4.2.0", "", { "dependencies": { "@typescript-eslint/utils": "^8.23.0", "eslint-visitor-keys": "^4.2.0", "espree": "^10.3.0" }, "peerDependencies": { "eslint": ">=9.0.0" } }, "sha512-j2o2GvOx9v66x8hmp/HJ+0T+nOppiO5ycGsCkifh7JPGgjxEhpkGmIGx3RWsoxpWbad3VCX8e8/T8n3+7ze1Zg=="],
+
+    "@tanstack/eslint-plugin-router": ["@tanstack/eslint-plugin-router@1.114.29", "", { "dependencies": { "@typescript-eslint/utils": "^8.23.0" }, "peerDependencies": { "eslint": "^8.57.0 || ^9.0.0" } }, "sha512-eV1QY6TgNfl5O9NeV3vDY+lfT1KunmOivHAQd5MXqPyQd5wnw79LSdzf+8H6E4tjUFYhs6xttHTO+QSqJ8fzew=="],
 
     "@tanstack/form-core": ["@tanstack/form-core@1.1.0", "", { "dependencies": { "@tanstack/store": "^0.7.0" } }, "sha512-RfRv+grnTzQhG6UyjhA+t9zyx0mSjaowyVzuo2qb4NR2Pc73zoNA5WKEAUhjwONlXrLSSs0h9LE0vJDbk8kYrQ=="],
 

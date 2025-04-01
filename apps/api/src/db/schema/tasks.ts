@@ -27,4 +27,4 @@ export const { createInsertSchema } = createSchemaFactory({
 export const taskInsertSchema = createInsertSchema(tasksTable);
 export const taskUpdateSchema = createUpdateSchema(tasksTable);
 export const taskSelectSchema = createSelectSchema(tasksTable);
-export type TaskStatus = (typeof taskStatus)[number]
+export type TaskStatus = (typeof taskStatus)[number];
