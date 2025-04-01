@@ -3,7 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import "@/App.css";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AnyFieldApi, useForm } from "@tanstack/react-form";
-import { pureTaskInsertSchema, taskStatus, TaskStatus } from "@cm3k/api/schema";
+import { taskInsertSchema, taskStatus, TaskStatus } from "@cm3k/api/schema";
 import { z } from "zod";
 import { createTask, deleteTask, getTasks } from "@api/tasks";
 
@@ -36,9 +36,9 @@ function TasksList() {
   const form = useForm({
     defaultValues: {
       status: taskStatus[0],
-    } as z.infer<typeof pureTaskInsertSchema>,
+    } as z.infer<typeof taskInsertSchema>,
     validators: {
-      onChange: pureTaskInsertSchema,
+      onChange: taskInsertSchema,
     },
     onSubmit({ value, formApi }) {
       mutate({ json: value });
@@ -89,7 +89,7 @@ function TasksList() {
                 >
                   {taskStatus.map((status, index) => (
                     <option key={index} value={status}>
-                      {status.replaceAll("_", " ")}
+                      {status.replace("_", " ")}
                     </option>
                   ))}
                   <option>wrong</option>

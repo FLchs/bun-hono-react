@@ -1,7 +1,7 @@
 import "./App.css";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AnyFieldApi, useForm } from "@tanstack/react-form";
-import { pureTaskInsertSchema, taskStatus, TaskStatus } from "@cm3k/api/schema";
+import { taskStatus, TaskStatus } from "@cm3k/api/schema";
 import { z } from "zod";
 import { createTask, deleteTask, getTasks } from "@api/tasks";
 

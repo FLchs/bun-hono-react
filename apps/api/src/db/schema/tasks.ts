@@ -2,7 +2,6 @@ import { sql } from "drizzle-orm";
 import { integer, text, sqliteTable } from "drizzle-orm/sqlite-core";
 import { createUpdateSchema } from "drizzle-zod";
 import { createSchemaFactory, createSelectSchema } from "drizzle-zod";
-import { z } from "zod";
 
 export const taskStatus = ["pending", "in_progress", "completed"] as const;
 
@@ -25,13 +24,7 @@ export const { createInsertSchema } = createSchemaFactory({
   },
 });
 
-export const pureTaskInsertSchema = z.object({
-  title: z.string(),
-  description: z.string().optional(),
-  status: z.enum(taskStatus),
-});
-
 export const taskInsertSchema = createInsertSchema(tasksTable);
 export const taskUpdateSchema = createUpdateSchema(tasksTable);
 export const taskSelectSchema = createSelectSchema(tasksTable);
-export type TaskStatus = (typeof taskStatus)[number];
+export type TaskStatus = (typeof taskStatus)[number]
