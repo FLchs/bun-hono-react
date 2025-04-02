@@ -1,11 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-
-import "@/App.css";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AnyFieldApi, useForm } from "@tanstack/react-form";
 import { taskInsertSchema, taskStatus, TaskStatus } from "@cm3k/api/schema";
 import { z } from "zod";
 import { createTask, deleteTask, getTasks } from "@api/tasks";
+import { TextInput } from "@/components/form/input/text";
+import { SelectInput } from "@/components/form/input/select";
+import { TextArea } from "@/components/form/input/textarea";
+import { Button } from "@/components/form/button";
 
 export const Route = createFileRoute("/tasks/")({
   component: TasksList,
@@ -48,89 +50,87 @@ function TasksList() {
 
   return (
     <>
-      <h1>Tasks</h1>
-      <div className="card">
-        <form
-          style={{ display: "flex", flexDirection: "column", gap: "8px" }}
-          onSubmit={(event) => {
-            event.preventDefault();
-            form.handleSubmit();
-          }}
-        >
-          <form.Field
-            name="title"
-            children={(field) => (
-              <>
-                <label htmlFor={field.name}>Title:</label>
-                <input
-                  id={field.name}
-                  name={field.name}
-                  value={field.state.value ?? ""}
-                  onBlur={field.handleBlur}
-                  onChange={(event) => field.handleChange(event.target.value)}
-                />
-                <FieldInfo field={field} />
-              </>
-            )}
-          />
-          <form.Field
-            name="status"
-            children={(field) => (
-              <>
-                <label htmlFor={field.name}>Status:</label>
-                <select
-                  id={field.name}
-                  name={field.name}
-                  value={field.state.value as TaskStatus}
-                  onBlur={field.handleBlur}
-                  onChange={(event) =>
-                    field.handleChange(event.target.value as TaskStatus)
-                  }
-                >
-                  {taskStatus.map((status, index) => (
-                    <option key={index} value={status}>
-                      {status.replace("_", " ")}
-                    </option>
-                  ))}
-                  <option>wrong</option>
-                </select>
-                <FieldInfo field={field} />
-              </>
-            )}
-          />
-          <form.Field
-            name="description"
-            children={(field) => (
-              <>
-                <label htmlFor={field.name}>Description:</label>
-                <input
-                  id={field.name}
-                  name={field.name}
-                  value={field.state.value ?? ""}
-                  onBlur={field.handleBlur}
-                  onChange={(event) => field.handleChange(event.target.value)}
-                />
-                <FieldInfo field={field} />
-              </>
-            )}
-          />
-          <button type="submit">
-            {form.state.isSubmitting ? "..." : "Submit"}
-          </button>
-        </form>
+      <h1 className="text-2xl">Tasks</h1>
+      <form
+        className="flex flex-col gap-4 my-4 w-96"
+        onSubmit={(event) => {
+          event.preventDefault();
+          form.handleSubmit();
+        }}
+      >
+        <form.Field
+          name="title"
+          children={(field) => (
+            <>
+              <TextInput
+                title="Title:"
+                id={field.name}
+                name={field.name}
+                value={field.state.value ?? ""}
+                onBlur={field.handleBlur}
+                onChange={(event) => field.handleChange(event.target.value)}
+              />
+              <FieldInfo field={field} />
+            </>
+          )}
+        />
+        <form.Field
+          name="status"
+          children={(field) => (
+            <>
+              <SelectInput
+                title="Status:"
+                id={field.name}
+                name={field.name}
+                value={field.state.value as TaskStatus}
+                onBlur={field.handleBlur}
+                onChange={(event) =>
+                  field.handleChange(event.target.value as TaskStatus)
+                }
+              >
+                {taskStatus.map((status, index) => (
+                  <option key={index} value={status}>
+                    {status.replace("_", " ")}
+                  </option>
+                ))}
+                <option>wrong</option>
+              </SelectInput>
+              <FieldInfo field={field} />
+            </>
+          )}
+        />
+        <form.Field
+          name="description"
+          children={(field) => (
+            <>
+              <TextArea
+                title="Description:"
+                id={field.name}
+                name={field.name}
+                value={field.state.value ?? ""}
+                onBlur={field.handleBlur}
+                onChange={(event) => field.handleChange(event.target.value)}
+              />
+              <FieldInfo field={field} />
+            </>
+          )}
+        />
+        <Button type="submit">
+          {form.state.isSubmitting ? "..." : "Submit"}
+        </Button>
+      </form>
 
-        <p>{error?.message}</p>
-        <pre>{error?.issues}</pre>
-        {data?.tasks.map((task) => (
-          <Tasks
-            id={task.id}
-            key={task.id}
-            title={task.title}
-            description={task.description}
-            onDelete={() => deleteT(task.id)}
-          />
-        ))}
-      </div>
+      <p>{error?.message}</p>
+      <pre>{error?.issues}</pre>
+      {data?.tasks.map((task) => (
+        <Tasks
+          id={task.id}
+          key={task.id}
+          title={task.title}
+          description={task.description}
+          onDelete={() => deleteT(task.id)}
+        />
+      ))}
     </>
   );
 }
@@ -147,9 +147,9 @@ function Tasks({
   onDelete: () => void;
 }) {
   return (
-    <div style={{ textAlign: "left" }}>
+    <div className="border-2 border-gray-900 rounded">
       <p>
-        <strong>Title: </strong>
+        <strong className="font-bold">Title: </strong>
         {title}
       </p>
       <p>
