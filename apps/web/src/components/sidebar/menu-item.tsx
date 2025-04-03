@@ -9,7 +9,7 @@ const BasicLinkComponent = forwardRef<
     <a
       ref={reference}
       {...properties}
-      className={`${properties.className} block [&.active]:font-bold [&.active]:bg-gray-700 hover:bg-gray-800 p-2 rounded-lg`}
+      className={`${properties.className} block [&.active]:font-bold [&.active]:bg-gray-700 hover:bg-gray-800 px-2 py-1 rounded-lg`}
     />
   );
 });
