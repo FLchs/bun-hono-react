@@ -11,10 +11,11 @@ export const tasksTable = sqliteTable("tasks", {
   description: text(),
   status: text({ enum: taskStatus }),
   created_at: integer({ mode: "timestamp" })
-    .default(sql`(current_timestamp)`)
-    .$onUpdate(() => sql`(current_timestamp)`),
+    .default(sql`(unixepoch())`)
+    .notNull(),
   updated_at: integer({ mode: "timestamp" })
-    .default(sql`(current_timestamp)`)
+    .default(sql`(unixepoch())`)
+    .$onUpdate(() => sql`(unixepoch()`)
     .notNull(),
 });
 
