@@ -1,4 +1,4 @@
-import { InferRequestType, InferResponseType } from 'hono';
+import { InferRequestType, InferResponseType } from "hono";
 import { client } from "../client";
 
 export const getTasks = async () => {
