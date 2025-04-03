@@ -6,6 +6,7 @@ import tseslint from "typescript-eslint";
 import config from "@cm3k/eslint-config";
 import pluginRouter from "@tanstack/eslint-plugin-router";
 import unusedImports from "eslint-plugin-unused-imports";
+// import tailwind from "eslint-plugin-tailwindcss";
 
 export default tseslint.config(
   ...config,
@@ -35,6 +36,7 @@ export default tseslint.config(
         { allowConstantExport: true },
       ],
       "no-unused-vars": "off", // or "@typescript-eslint/no-unused-vars": "off",
+      "unicorn/prevent-abbreviations": "off", // makes everything soooooo literal
       "unused-imports/no-unused-imports": "error",
       "unused-imports/no-unused-vars": [
         "warn",
@@ -47,5 +49,6 @@ export default tseslint.config(
       ],
     },
   },
+  // ...tailwind.configs["flat/recommended"],
   ...pluginRouter.configs["flat/recommended"],
 );
