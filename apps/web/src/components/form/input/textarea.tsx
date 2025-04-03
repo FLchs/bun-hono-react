@@ -11,7 +11,7 @@ export const TextArea = (properties: TextInputProperties) => {
       <textarea
         rows={5}
         {...inputProperties}
-        className="w-full block bg-gray-700 text-white p-1 rounded border-gray-900 border-1 focus:ring-0 focus:outline-0 focus:border-blue-500"
+        className="w-full block bg-gray-700 text-white p-1 rounded border-gray-900 border-1 focus:ring-0 focus:outline-0 focus:border-blue-500 resize-none"
       />
     </div>
   );
