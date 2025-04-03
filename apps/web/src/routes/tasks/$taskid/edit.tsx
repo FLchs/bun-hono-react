@@ -4,7 +4,7 @@ import { createFileRoute, useLoaderData } from "@tanstack/react-router";
 
 const queryClient = new QueryClient();
 
-export const Route = createFileRoute("/tasks/$taskid/taskUpdate")({
+export const Route = createFileRoute("/tasks/$taskid/edit")({
   component: RouteComponent,
   loader: async ({ params }) => {
     const { tasks } = await queryClient.ensureQueryData({

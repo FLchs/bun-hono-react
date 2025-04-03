@@ -1,13 +1,14 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AnyFieldApi, useForm } from "@tanstack/react-form";
 import { taskInsertSchema, taskStatus, TaskStatus } from "@cm3k/api/schema";
 import { z } from "zod";
-import { createTask, deleteTask, getTasks } from "@api/tasks";
+import { createTask, getTasks } from "@api/tasks";
 import { TextInput } from "@/components/form/input/text";
 import { SelectInput } from "@/components/form/input/select";
 import { TextArea } from "@/components/form/input/textarea";
-import { Button } from "@/components/form/button";
+import { TaskItem } from "@/components/tasks/task";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/tasks/")({
   component: TasksList,
@@ -23,13 +24,6 @@ function TasksList() {
 
   const { mutate, error } = useMutation({
     mutationFn: createTask,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["tasks"] });
-    },
-  });
-
-  const { mutate: deleteT } = useMutation({
-    mutationFn: deleteTask,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
@@ -122,52 +116,8 @@ function TasksList() {
 
       <p>{error?.message}</p>
       <pre>{error?.issues}</pre>
-      {data?.tasks.map((task) => (
-        <Tasks
-          id={task.id}
-          key={task.id}
-          title={task.title}
-          description={task.description}
-          onDelete={() => deleteT(task.id)}
-        />
-      ))}
+      {data?.tasks.map((task) => <TaskItem task={task} />)}
     </>
-  );
-}
-
-function Tasks({
-  id,
-  title,
-  description,
-  onDelete,
-}: {
-  id: number;
-  title: string;
-  description: string | null;
-  onDelete: () => void;
-}) {
-  return (
-    <div className="border-2 border-gray-900 rounded">
-      <p>
-        <strong className="font-bold">Title: </strong>
-        {title}
-      </p>
-      <p>
-        <strong> Description: </strong>
-        {description}
-      </p>
-      <button type="submit" onClick={onDelete}>
-        Delete
-      </button>
-      <Link
-        type="submit"
-        to="/tasks/$taskid/taskUpdate"
-        params={{ taskid: id.toString() }}
-      >
-        Edit
-      </Link>
-      <hr />
-    </div>
   );
 }
 
