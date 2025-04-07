@@ -42,7 +42,7 @@ export const TaskItem = ({ task }: { task: Task }) => {
         >
           <Button>Edit</Button>
         </Link>
-        <Button variant="secondary" onClick={async () => deleteT(task.id)}>
+        <Button variant="danger" onClick={async () => deleteT(task.id)}>
           Delete
         </Button>
       </div>
