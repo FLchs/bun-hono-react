@@ -31,8 +31,12 @@ const tasksRouter = new Hono()
   .post("/:id{[0-9]+}", validate("json", taskUpdateSchema), async (c) => {
     const values = c.req.valid("json");
     const id = z.coerce.number().parse(c.req.param("id"));
-    await db.update(tasksTable).set(values).where(eq(tasksTable.id, id));
-    return c.json({ success: true }, 201);
+    const [task] = await db
+      .update(tasksTable)
+      .set(values)
+      .where(eq(tasksTable.id, id))
+      .returning();
+    return c.json(task, 201);
   })
   .delete("/:id{[0-9]+}", async (c) => {
     const id = z.coerce.number().parse(c.req.param("id"));
