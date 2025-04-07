@@ -22,6 +22,16 @@ export const getTaskQueryOption = (id: string) => queryOptions({
   queryFn: () => getTask(id),
 });
 
+export const updateTask = (
+  id: string
+) => {
+  return async (data: InferRequestType<typeof client.api.tasks[":id{[0-9]+}"]["$post"]>) => {
+    const response = await client.api.tasks[":id{[0-9]+}"].$post({ json: data.json, param: { id } });
+    return await response.json();
+  }
+};
+
+
 export type TasksResponse = InferResponseType<typeof client.api.tasks.$get>;
 export type Tasks = TasksResponse;
 export type Task = Tasks[number];
