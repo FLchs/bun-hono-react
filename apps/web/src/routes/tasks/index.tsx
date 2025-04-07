@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AnyFieldApi, useForm } from "@tanstack/react-form";
 import { taskInsertSchema, taskStatus, TaskStatus } from "@cm3k/api/schema";
 import { z } from "zod";
-import { createTask, getTasks } from "@api/tasks";
+import { createTask, getTasksQueryOption } from "@api/tasks";
 import { TextInput } from "@/components/form/input/text";
 import { SelectInput } from "@/components/form/input/select";
 import { TextArea } from "@/components/form/input/textarea";
@@ -12,15 +12,15 @@ import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/tasks/")({
   component: TasksList,
+  loader: ({ context: { queryClient } }) => {
+    queryClient.ensureQueryData(getTasksQueryOption);
+  },
 });
 
 function TasksList() {
   const queryClient = useQueryClient();
 
-  const { data } = useQuery({
-    queryKey: ["tasks"],
-    queryFn: getTasks,
-  });
+  const { data, isPending } = useQuery(getTasksQueryOption);
 
   const { mutate, error } = useMutation({
     mutationFn: createTask,
@@ -116,7 +116,9 @@ function TasksList() {
 
       <p>{error?.message}</p>
       <pre>{error?.issues}</pre>
-      {data?.tasks.map((task) => <TaskItem task={task} />)}
+      {isPending
+        ? "Loading..."
+        : data?.map((task) => <TaskItem key={task.id} task={task} />)}
     </>
   );
 }
