@@ -6,7 +6,7 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "bun run --filter \"./apps/*\" dev"
+    "dev": "bun run --elide-lines 0 --filter \"./apps/*\" dev"
   },
   "devDependencies": {
     "@types/bun": "latest"
