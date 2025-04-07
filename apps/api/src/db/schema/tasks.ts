@@ -1,6 +1,5 @@
 import { sql } from "drizzle-orm";
 import { integer, text, sqliteTable } from "drizzle-orm/sqlite-core";
-import { createUpdateSchema } from "drizzle-zod";
 import { createSchemaFactory, createSelectSchema } from "drizzle-zod";
 
 export const taskStatus = ["pending", "in_progress", "completed"] as const;
@@ -15,11 +14,11 @@ export const tasksTable = sqliteTable("tasks", {
     .notNull(),
   updated_at: integer({ mode: "timestamp" })
     .default(sql`(unixepoch())`)
-    .$onUpdate(() => sql`(unixepoch()`)
+    .$onUpdate(() => new Date())
     .notNull(),
 });
 
-export const { createInsertSchema } = createSchemaFactory({
+export const { createInsertSchema, createUpdateSchema } = createSchemaFactory({
   coerce: {
     date: true,
   },
