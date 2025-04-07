@@ -12,14 +12,23 @@ import { z } from "zod";
 const tasksRouter = new Hono()
   .get("/", async (c) => {
     const tasks = await db.select().from(tasksTable);
-    return c.json({ tasks }, 200);
+    // await new Promise((resolve) => setTimeout(() => resolve(true), 5000));
+    return c.json(tasks, 200);
   })
   .post("/", validate("json", taskInsertSchema), async (c) => {
     const values = c.req.valid("json");
     await db.insert(tasksTable).values(values);
     return c.json({ success: true }, 201);
   })
-  .post("/id{[0-9]+}", validate("json", taskUpdateSchema), async (c) => {
+  .get("/:id{[0-9]+}", async (c) => {
+    const id = z.coerce.number().parse(c.req.param("id"));
+    const [task] = await db
+      .select()
+      .from(tasksTable)
+      .where(eq(tasksTable.id, id));
+    return c.json(task, 200);
+  })
+  .post("/:id{[0-9]+}", validate("json", taskUpdateSchema), async (c) => {
     const values = c.req.valid("json");
     const id = z.coerce.number().parse(c.req.param("id"));
     await db.update(tasksTable).set(values).where(eq(tasksTable.id, id));
