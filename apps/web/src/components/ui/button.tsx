@@ -1,12 +1,16 @@
 import { ComponentProps } from "react";
+import { Spinner } from "./spinner";
 
 type Variant = "primary" | "secondary" | "danger";
 interface Props {
   variant?: Variant;
+  loading?: boolean;
 }
 
 export function Button({
   variant = "primary",
+  loading = false,
+  children,
   ...properties
 }: ComponentProps<"button"> & Props) {
   const variants: Record<Variant, string> = {
@@ -21,7 +25,11 @@ export function Button({
   return (
     <button
       {...properties}
-      className={`${properties?.className ?? ""} ${variants[variant]} hover:cursor-pointer min-w-20 w-fit rounded py-1 px-4 font-bold border`}
-    />
+      disabled={properties.disabled || loading}
+      className={`${properties?.className ?? ""} ${variants[variant]} min-w-20 w-fit rounded py-1 px-4 font-bold border flex flex-row text-center items-center place-content-center ${loading || "hover:cursor-pointer"}`}
+    >
+      {loading && <Spinner />}
+      {children}
+    </button>
   );
 }
