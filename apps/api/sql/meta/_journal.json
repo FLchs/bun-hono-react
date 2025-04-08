@@ -8,6 +8,13 @@
       "when": 1742496759109,
       "tag": "0000_create_tasks_table",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1743611809969,
+      "tag": "0001_fix_date_task_table",
+      "breakpoints": true
     }
   ]
 }

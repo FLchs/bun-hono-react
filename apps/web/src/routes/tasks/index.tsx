@@ -1,185 +1,38 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-
-import "@/App.css";
+import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { AnyFieldApi, useForm } from "@tanstack/react-form";
-import { taskInsertSchema, taskStatus, TaskStatus } from "@cm3k/api/schema";
-import { z } from "zod";
-import { createTask, deleteTask, getTasks } from "@api/tasks";
+import { createTask, getTasksQueryOption } from "@api/tasks";
+import { TaskItem } from "@/components/tasks/task";
+import { TaskForm } from "@/components/tasks/form";
 
 export const Route = createFileRoute("/tasks/")({
   component: TasksList,
+  loader: ({ context: { queryClient } }) => {
+    queryClient.ensureQueryData(getTasksQueryOption);
+  },
 });
 
 function TasksList() {
   const queryClient = useQueryClient();
 
-  const { data } = useQuery({
-    queryKey: ["tasks"],
-    queryFn: getTasks,
-  });
+  const { data, isPending } = useQuery(getTasksQueryOption);
 
-  const { mutate, error } = useMutation({
+  const { mutateAsync, error } = useMutation({
     mutationFn: createTask,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
   });
 
-  const { mutate: deleteT } = useMutation({
-    mutationFn: deleteTask,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["tasks"] });
-    },
-  });
-
-  const form = useForm({
-    defaultValues: {
-      status: taskStatus[0],
-    } as z.infer<typeof taskInsertSchema>,
-    validators: {
-      onChange: taskInsertSchema,
-    },
-    onSubmit({ value, formApi }) {
-      mutate({ json: value });
-      formApi.reset();
-    },
-  });
-
   return (
     <>
-      <h1>Tasks</h1>
-      <div className="card">
-        <form
-          style={{ display: "flex", flexDirection: "column", gap: "8px" }}
-          onSubmit={(event) => {
-            event.preventDefault();
-            form.handleSubmit();
-          }}
-        >
-          <form.Field
-            name="title"
-            children={(field) => (
-              <>
-                <label htmlFor={field.name}>Title:</label>
-                <input
-                  id={field.name}
-                  name={field.name}
-                  value={field.state.value ?? ""}
-                  onBlur={field.handleBlur}
-                  onChange={(event) => field.handleChange(event.target.value)}
-                />
-                <FieldInfo field={field} />
-              </>
-            )}
-          />
-          <form.Field
-            name="status"
-            children={(field) => (
-              <>
-                <label htmlFor={field.name}>Status:</label>
-                <select
-                  id={field.name}
-                  name={field.name}
-                  value={field.state.value as TaskStatus}
-                  onBlur={field.handleBlur}
-                  onChange={(event) =>
-                    field.handleChange(event.target.value as TaskStatus)
-                  }
-                >
-                  {taskStatus.map((status, index) => (
-                    <option key={index} value={status}>
-                      {status.replace("_", " ")}
-                    </option>
-                  ))}
-                  <option>wrong</option>
-                </select>
-                <FieldInfo field={field} />
-              </>
-            )}
-          />
-          <form.Field
-            name="description"
-            children={(field) => (
-              <>
-                <label htmlFor={field.name}>Description:</label>
-                <input
-                  id={field.name}
-                  name={field.name}
-                  value={field.state.value ?? ""}
-                  onBlur={field.handleBlur}
-                  onChange={(event) => field.handleChange(event.target.value)}
-                />
-                <FieldInfo field={field} />
-              </>
-            )}
-          />
-          <button type="submit">
-            {form.state.isSubmitting ? "..." : "Submit"}
-          </button>
-        </form>
+      <h1 className="text-2xl">Tasks</h1>
 
-        <p>{error?.message}</p>
-        <pre>{error?.issues}</pre>
-        {data?.tasks.map((task) => (
-          <Tasks
-            id={task.id}
-            key={task.id}
-            title={task.title}
-            description={task.description}
-            onDelete={() => deleteT(task.id)}
-          />
-        ))}
-      </div>
-    </>
-  );
-}
-
-function Tasks({
-  id,
-  title,
-  description,
-  onDelete,
-}: {
-  id: number;
-  title: string;
-  description: string | null;
-  onDelete: () => void;
-}) {
-  return (
-    <div style={{ textAlign: "left" }}>
-      <p>
-        <strong>Title: </strong>
-        {title}
-      </p>
-      <p>
-        <strong> Description: </strong>
-        {description}
-      </p>
-      <button type="submit" onClick={onDelete}>
-        Delete
-      </button>
-      <Link
-        type="submit"
-        to="/tasks/$taskid/taskUpdate"
-        params={{ taskid: id.toString() }}
-      >
-        Edit
-      </Link>
-      <hr />
-    </div>
-  );
-}
-
-function FieldInfo({ field }: { field: AnyFieldApi }) {
-  return (
-    <>
-      {field.state.meta.isTouched && field.state.meta.errors.length > 0 ? (
-        <em>
-          {field.state.meta.errors.map((error) => error.message).join(",")}
-        </em>
-      ) : undefined}
-      {field.state.meta.isValidating ? "Validating..." : undefined}
+      <TaskForm handleSubmit={mutateAsync} />
+      <p>{error?.message}</p>
+      <pre>{error?.issues}</pre>
+      {isPending
+        ? "Loading..."
+        : data?.map((task) => <TaskItem key={task.id} task={task} />)}
     </>
   );
 }
