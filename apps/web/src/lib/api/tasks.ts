@@ -1,6 +1,8 @@
-import { InferRequestType, InferResponseType } from "hono";
+import { InferResponseType } from "hono";
 import { client } from "../client";
 import { queryOptions } from "@tanstack/react-query";
+import { z } from "zod";
+import { taskInsertSchema } from "@cm3k/api/schema";
 
 const getTasks = async () => {
   const response = await client.api.tasks.$get();
@@ -13,37 +15,42 @@ export const getTasksQueryOption = queryOptions({
 });
 
 const getTask = async (id: string) => {
-  const response = await client.api.tasks[":id{[0-9]+}"].$get({ param: { id } });
+  const response = await client.api.tasks[":id{[0-9]+}"].$get({
+    param: { id },
+  });
   return await response.json();
 };
 
-export const getTaskQueryOption = (id: string) => queryOptions({
-  queryKey: ["task", id],
-  queryFn: () => getTask(id),
-});
+export const getTaskQueryOption = (id: string) =>
+  queryOptions({
+    queryKey: ["task", id],
+    queryFn: () => getTask(id),
+  });
 
-export const updateTask = (
-  id: string
-) => {
-  return async (data: InferRequestType<typeof client.api.tasks[":id{[0-9]+}"]["$post"]>) => {
-    const response = await client.api.tasks[":id{[0-9]+}"].$post({ json: data.json, param: { id } });
+export const updateTask = (id: string) => {
+  return async (data: z.infer<typeof taskInsertSchema>) => {
+    const response = await client.api.tasks[":id{[0-9]+}"].$put({
+      json: data,
+      param: { id },
+    });
     return await response.json();
-  }
+  };
 };
-
 
 export type TasksResponse = InferResponseType<typeof client.api.tasks.$get>;
 export type Tasks = TasksResponse;
 export type Task = Tasks[number];
 
 export const createTask = async (
-  data: InferRequestType<typeof client.api.tasks.$post>,
+  data: z.infer<typeof taskInsertSchema>,
 ) => {
-  return await client.api.tasks.$post(data);
+  const resp = await client.api.tasks.$post({ json: data });
+  return await resp.json()
 };
 
-export const deleteTask = async (id: number) => {
-  await client.api.tasks[":id{[0-9]+}"].$delete({
-    param: { id: id.toString() },
-  });
+export const deleteTask = (id: number) => {
+  return async () =>
+    await client.api.tasks[":id{[0-9]+}"].$delete({
+      param: { id: id.toString() },
+    });
 };

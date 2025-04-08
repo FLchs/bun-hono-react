@@ -14,13 +14,13 @@ export const Route = createFileRoute("/tasks/$taskid/edit")({
 function RouteComponent() {
   const queryClient = useQueryClient();
   const { taskid } = Route.useParams();
-  const { data: task, isPending } = useQuery(getTaskQueryOption(taskid));
   const router = useRouter();
-  const { mutate } = useMutation({
+  const { data: task, isPending } = useQuery(getTaskQueryOption(taskid));
+  const { mutateAsync } = useMutation({
     mutationFn: updateTask(taskid),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["task", taskid] });
       router.history.back();
+      queryClient.invalidateQueries({ queryKey: ["task", taskid] });
     },
   });
 
@@ -34,7 +34,7 @@ function RouteComponent() {
           <Button variant="secondary">⬅ Back</Button>
         </Link>
         <TaskForm
-          handleSubmit={(data) => mutate({ json: data, param: { id: taskid } })}
+          handleSubmit={mutateAsync}
           defaultValues={{
             title: task.title,
             description: task.description,

@@ -16,7 +16,7 @@ function TasksList() {
 
   const { data, isPending } = useQuery(getTasksQueryOption);
 
-  const { mutate, error } = useMutation({
+  const { mutateAsync, error } = useMutation({
     mutationFn: createTask,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
@@ -27,7 +27,7 @@ function TasksList() {
     <>
       <h1 className="text-2xl">Tasks</h1>
 
-      <TaskForm handleSubmit={(data) => mutate({ json: data })} />
+      <TaskForm handleSubmit={mutateAsync} />
       <p>{error?.message}</p>
       <pre>{error?.issues}</pre>
       {isPending

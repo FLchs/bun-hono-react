@@ -10,7 +10,7 @@ export function TaskForm({
   handleSubmit,
   defaultValues = { title: "" },
 }: {
-  handleSubmit: (data: z.infer<typeof taskInsertSchema>) => void;
+  handleSubmit: (data: z.infer<typeof taskInsertSchema>) => Promise<unknown>;
   defaultValues?: z.infer<typeof taskInsertSchema>;
 }) {
   const form = useForm({
@@ -21,8 +21,9 @@ export function TaskForm({
     validators: {
       onChange: taskInsertSchema,
     },
-    onSubmit({ value }) {
-      handleSubmit(value);
+    onSubmit: async ({ value, formApi }) => {
+      await handleSubmit(value);
+      formApi.reset();
     },
   });
 
@@ -31,6 +32,7 @@ export function TaskForm({
       className="flex flex-col gap-4 my-4 w-96"
       onSubmit={(event) => {
         event.preventDefault();
+        event.stopPropagation();
         form.handleSubmit();
       }}
     >
@@ -91,9 +93,14 @@ export function TaskForm({
           </>
         )}
       />
-      <Button type="submit">
-        {form.state.isSubmitting ? "..." : "Submit"}
-      </Button>
+      <form.Subscribe
+        selector={(state) => [state.canSubmit, state.isSubmitting]}
+        children={([canSubmit, isSubmitting]) => (
+          <Button type="submit" disabled={!canSubmit} loading={isSubmitting}>
+            Submit
+          </Button>
+        )}
+      />
     </form>
   );
 }

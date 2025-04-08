@@ -2,11 +2,12 @@ import { deleteTask, Task } from "@/lib/api/tasks";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "../ui/button";
 import { Link } from "@tanstack/react-router";
+import { LocalizedDate } from "../ui/localized-date";
 
 export const TaskItem = ({ task }: { task: Task }) => {
   const queryClient = useQueryClient();
-  const { mutate: deleteT } = useMutation({
-    mutationFn: deleteTask,
+  const { mutateAsync: deleteT, isPending } = useMutation({
+    mutationFn: deleteTask(task.id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
@@ -24,17 +25,9 @@ export const TaskItem = ({ task }: { task: Task }) => {
       </p>
       <p>
         <strong>Date: </strong>
-        {new Date(task.created_at).toLocaleString(undefined, {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-          timeZone: "UTC",
-        })}
+        <LocalizedDate date={task.created_at} />
       </p>
-      <div className="flex flex-row gap-2">
+      <div className="flex flex-row gap-4 my-2">
         <Link
           type="submit"
           to="/tasks/$taskid/edit"
@@ -42,7 +35,11 @@ export const TaskItem = ({ task }: { task: Task }) => {
         >
           <Button>Edit</Button>
         </Link>
-        <Button variant="danger" onClick={async () => deleteT(task.id)}>
+        <Button
+          variant="danger"
+          onClick={async () => await deleteT()}
+          loading={isPending}
+        >
           Delete
         </Button>
       </div>
