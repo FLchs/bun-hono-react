@@ -41,11 +41,9 @@ export type TasksResponse = InferResponseType<typeof client.api.tasks.$get>;
 export type Tasks = TasksResponse;
 export type Task = Tasks[number];
 
-export const createTask = async (
-  data: z.infer<typeof taskInsertSchema>,
-) => {
+export const createTask = async (data: z.infer<typeof taskInsertSchema>) => {
   const resp = await client.api.tasks.$post({ json: data });
-  return await resp.json()
+  return await resp.json();
 };
 
 export const deleteTask = (id: number) => {
