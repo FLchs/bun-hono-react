@@ -1,4 +1,13 @@
-# bun-hono-react
+# Fullstack Hono + React app
+
+## Back
+Hono
+Drizzle
+
+## Front
+Vite
+React
+Tanstack Router/Query/Form
 
 To install dependencies:
 
